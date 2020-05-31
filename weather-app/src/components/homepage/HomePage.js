@@ -7,12 +7,14 @@ class HomePage extends Component{
 
     state = {
         isRegister: false,
+        registerTitle: "Not a user Register",
+        loginTitle: "Please Login to the platform"
 
     }
 
     switchForms = () => {
-        const currentState = this.state.isRegister;
-        this.setState({isRegister : !currentState});
+        const currentFormState = this.state.isRegister;
+        this.setState({isRegister : !currentFormState});
     }
 
     switchButtons = () => {
@@ -24,9 +26,9 @@ class HomePage extends Component{
 
         return (
             <div>
-                <div onClick={this.switchForms}>Not a user Register?</div>
+                <div onClick={this.switchForms}> {this.state.isRegister ? this.state.registerNote : this.state.loginNote}</div>
                 <div>
-                    {this.state.isRegister === true ? <RegisterFrom></RegisterFrom> : <LoginForm></LoginForm>}
+                    {this.state.isRegister ? <RegisterFrom></RegisterFrom> : <LoginForm></LoginForm>}
                 </div>
             </div>
            
