@@ -7,7 +7,9 @@ class WeatherGraph extends Component{
 
 
     render(){
-
+        return(
+            <div> Weather is sunny</div>
+        )
     }
 }
 

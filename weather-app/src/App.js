@@ -1,5 +1,6 @@
 import React from 'react';
-import HomePage from '../src/components/homepage/HomePage.js'
+import HomePage from '../src/components/homepage/HomePage'
+import Dashboard from '../src/components/dashboard/Dashboard'
 import {
     BrowserRouter as Router,
     Switch,
@@ -15,6 +16,9 @@ function App() {
             <Switch>
               <Route exact path="/">
                 <HomePage></HomePage>
+              </Route>
+              <Route exact path="/dashboard">
+                <Dashboard></Dashboard>
               </Route>
             </Switch>
           </div>

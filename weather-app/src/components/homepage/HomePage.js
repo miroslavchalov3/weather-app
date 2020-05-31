@@ -26,7 +26,7 @@ class HomePage extends Component{
 
         return (
             <div>
-                <div onClick={this.switchForms}> {this.state.isRegister ? this.state.registerNote : this.state.loginNote}</div>
+                <div onClick={this.switchForms}> {this.state.isRegister ? this.state.registerTitle : this.state.loginTitle}</div>
                 <div>
                     {this.state.isRegister ? <RegisterFrom></RegisterFrom> : <LoginForm></LoginForm>}
                 </div>
