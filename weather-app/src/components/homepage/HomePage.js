@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
 import LoginForm from '../login-form/LoginForm'
 import RegisterFrom from '../register-form/RegisterForm'
-
+import './HomePage.css';
 
 class HomePage extends Component{
 
     state = {
         isRegister: false,
-        registerTitle: "Not a user Register",
-        loginTitle: "Please Login to the platform"
-
+        text: {
+            registerTitle: "Not a user Register ?",
+            loginTitle: "Alredy Register ",
+            clickHereText: "click here",
+            register: "Register",
+            login: "Login"
+        },
     }
 
     switchForms = () => {
@@ -25,11 +29,23 @@ class HomePage extends Component{
     render(){
 
         return (
-            <div>
-                <div onClick={this.switchForms}> {this.state.isRegister ? this.state.registerTitle : this.state.loginTitle}</div>
-                <div>
-                    {this.state.isRegister ? <RegisterFrom></RegisterFrom> : <LoginForm></LoginForm>}
+            <div className="form-container">
+                <div className="form">
+                <div> {this.state.isRegister ? 
+                    <p>{this.state.text.loginTitle} <span className="link" onClick={this.switchForms}> {this.state.text.clickHereText}</span></p> : 
+                    <p>{this.state.text.registerTitle} <span className="link" onClick={this.switchForms}> {this.state.text.clickHereText}</span></p>
+                    }
                 </div>
+                    <div>
+                        {this.state.isRegister ? <RegisterFrom></RegisterFrom> : <LoginForm></LoginForm>}
+                    </div>
+                    <div>
+                        {this.state.isRegister ? <button value="Register" className="button register">{this.state.text.register}</button> : 
+                        <button className="button login"> {this.state.text.login}</button>}
+                    </div>
+                </div>
+                
+                
             </div>
            
           );
