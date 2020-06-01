@@ -5,10 +5,7 @@ const fetch = require("node-fetch");
 const bodyParser = require('koa-bodyparser')
 const fs = require('fs');
 const userPath = __dirname + '/users';
-const auth = require('koa-basic-auth');
 let users = [];
-
-
 
 // Init users
 fs.readFile(`${userPath}/users.txt`, 'utf8', (err, data) => {
@@ -34,32 +31,7 @@ app.use(async (ctx, next) => {
     await next();
 });
 
-// Error handling middleware
-app.use(function *(next){
-    try {
-       console.log(next);
-       yield next;
-    } catch (err) {
-       if (401 == err.status) {
-          this.status = 401;
-          this.set('WWW-Authenticate', 'Basic');
-          this.body = 'You have no access here';
-       } else {
-          throw err;
-       }
-    }
- });
- 
-
-// Handdle global error
-const handleErrors = async (ctx, next) => {
-    try {
-      await next();
-    } catch (e) {
-      ctx.status = 502;
-    }
-  };
-  
+// Fetch Data from Open Weather Api server
 const getWeather = async (ctx, next) => {
     const res = await fetch(url);
     if (!res.ok) {
@@ -68,28 +40,33 @@ const getWeather = async (ctx, next) => {
     ctx.state.weather = await res.json();
     await next();
 };
-  
+ 
+// Send weather data to user call
 const sendWeatherData = ctx => {
     ctx.status = 200;
     ctx.body = ctx.state.weather;
 };
 
-const checkDuplicateUsers = (users, user) => {
-    let duplicate = false;
-    let result = users.filter(item => {
-        if(item.name === user.name){
-            duplicate = true;
-        } else {
-            duplicate = false;
-        }
-      })
-      return duplicate;
+// Handdle weather error
+const handleErrors = async (ctx, next) => {
+    try {
+      await next();
+    } catch (e) {
+      ctx.status = 502;
+    }
+  };
+
+const checkDuplicateUsers = (user) => {
+    const match = users.find(item => item.name === user.name);
+    return !!match;
 }
 
+// Register and check user for duplicate
  const registerUser = (ctx) => {
      let user = ctx.request.body;
+     user.id = users.length; 
 
-     if(checkDuplicateUsers(users, user)){
+     if(checkDuplicateUsers(user)){
         ctx.body = `${user.name} 'User is alredy Register`;
         ctx.status = 400;
         return;
@@ -102,15 +79,77 @@ const checkDuplicateUsers = (users, user) => {
     ctx.status = 200;
 }
 
-const deleteUser = (ctx) => {
-
-    
+// Check Login of User
+const loginUser = (ctx) => {
+    let headers = ctx.request.headers.authorization;
+    if(headers && checkRegisterdUser(headers)){
+        ctx.body = "Successful login";
+        ctx.status = 200;
+    } else {
+        ctx.body = "Username"
+        ctx.status = 401 ;
+    }
 }
 
+// Check if user is register with hash check
+const checkRegisterdUser = (userHash) => {
+    const match = users.find(item => item.hash === userHash);
+    return !!match;
+};
 
-router.get("", handleErrors, getWeather,sendWeatherData);
-router.post("/users", registerUser);
-router.post("/login", auth())
+
+const checkAdmin = (userHash) => {
+    const match = users.find(item => ( item.hash === userHash) && item.isAdmin);
+    return !!match;
+}
+
+const findAndDeleteUser = (userId) => {
+    const match = users.findIndex(item => parseInt(item.id) === parseInt(userId));
+    users.splice(match, 1);
+    fs.writeFileSync(`${userPath}/users.txt`, JSON.stringify(users) , (err) => {
+    });
+}
+
+const getAllUsers = (ctx) => {
+    ctx.body = users;
+    ctx.status = 200;
+}
+
+const deleteUser = (ctx) => {
+    let userHash =  ctx.request.headers.authorization;
+    let deletedUserId = ctx.params.id;
+    if(checkAdmin(userHash)){
+        findAndDeleteUser(deletedUserId)
+        ctx.body = "User is deleted";
+        ctx.status = 200;
+    } else {
+        ctx.body = "You cannot delete that user you are not admin";
+        ctx.status = 401;
+    }
+}
+
+// Auth Guard
+app.use(async (ctx, next) => {
+    let userHash = ctx.request.headers.authorization;
+    if(ctx.url === '/register'){
+        await next();
+    } else {
+        // Check user while is login for all request
+        if(userHash && checkRegisterdUser(userHash)){
+            await next();
+         } else {
+             ctx.status = 401;
+             ctx.body = "Please login"
+         }
+    }
+})
+
+// Routers
+router.get("/weather", handleErrors, getWeather,sendWeatherData);
+router.post("/register", registerUser);
+router.get("/login", loginUser);
+router.del("/user/:id", deleteUser);
+router.get("/users", getAllUsers);
 
 app.use(router.routes()).use(router.allowedMethods());
 app.listen(3000);

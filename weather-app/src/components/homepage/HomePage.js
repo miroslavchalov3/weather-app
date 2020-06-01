@@ -29,19 +29,19 @@ class HomePage extends Component{
     render(){
 
         return (
-            <div class="form-container">
-                <div class="form">
+            <div className="form-container">
+                <div className="form">
                 <div> {this.state.isRegister ? 
-                    <p>{this.state.text.loginTitle} <span class="link" onClick={this.switchForms}> {this.state.text.clickHereText}</span></p> : 
-                    <p>{this.state.text.registerTitle} <span class="link" onClick={this.switchForms}> {this.state.text.clickHereText}</span></p>
+                    <p>{this.state.text.loginTitle} <span className="link" onClick={this.switchForms}> {this.state.text.clickHereText}</span></p> : 
+                    <p>{this.state.text.registerTitle} <span className="link" onClick={this.switchForms}> {this.state.text.clickHereText}</span></p>
                     }
                 </div>
                     <div>
                         {this.state.isRegister ? <RegisterFrom></RegisterFrom> : <LoginForm></LoginForm>}
                     </div>
                     <div>
-                        {this.state.isRegister ? <button value="Register" class="button register">{this.state.text.register}</button> : 
-                        <button class="button login"> {this.state.text.login}</button>}
+                        {this.state.isRegister ? <button value="Register" className="button register">{this.state.text.register}</button> : 
+                        <button className="button login"> {this.state.text.login}</button>}
                     </div>
                 </div>
                 
