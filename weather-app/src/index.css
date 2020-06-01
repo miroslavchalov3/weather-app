@@ -1,3 +1,6 @@
+@import url(https://fonts.googleapis.com/css?family=Poiret+One);
+
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -13,7 +16,59 @@ body {
 
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.button{
+    border: none;
+    padding:0.7em 1.7em;
+    margin-top: 5px;
+    border-radius:0.2em;
+    box-sizing: border-box;
+    text-decoration:none;
+    font-family:'Roboto',sans-serif;
+    font-weight:400;
+    color:#FFFFFF;
+    background-color:#3369ff;
+    box-shadow:inset 0 -0.6em 1em -0.35em rgba(0,0,0,0.17),inset 0 0.6em 2em -0.3em rgba(255,255,255,0.15),inset 0 0 0em 0.05em rgba(255,255,255,0.12);
+    text-align:center;
+    position:relative;
+    cursor:  pointer;
+}
+
+.login{
+    background-color:#2979FF;
+    margin-top: 5px;
+}
+
+.register{
+    background-color:#CCCCCC; 
+    color:#000000;
+}
+
+.center-margin {
+    margin: 0 auto;
+}
+
+.small-margin-top{
+    margin-top: 5px;
+}
+
+.link{
+    cursor: pointer;
+    color: #0165c7;
+}
+
+.error{
+    width: 100%;
+    font-weight: bold;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    color: #d62f2f;
+    display: block;
+}
+
+.form-inputs{
+    width: 95%;
+    height: 30px;
+    padding: 5px;
+    border: none;
+    margin-top: 10px;
 }

@@ -2,7 +2,8 @@ const Koa = require('koa');
 const KoaRouter = require('koa-router');
 const json = require('koa-json');
 const fetch = require("node-fetch");
-const bodyParser = require('koa-bodyparser')
+const bodyParser = require('koa-bodyparser');
+const cors = require('@koa/cors');;
 const fs = require('fs');
 const userPath = __dirname + '/users';
 let users = [];
@@ -17,7 +18,9 @@ fs.readFile(`${userPath}/users.txt`, 'utf8', (err, data) => {
 const app = new Koa();
 const router = new KoaRouter();
 const apiKey = "dff7d764b61b4c7883f558d4ed207bfa";
-const url = `https://api.openweathermap.org/data/2.5/onecall?lat=42.6975&lon=23.3242&appid=${apiKey}`
+let cityUrl = (city) => {return `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`}
+
+let fullDataUrl = (lat, lon ) => {return `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}`};
 
 // JSON Prettier Middleware
 app.use(json());
@@ -31,30 +34,42 @@ app.use(async (ctx, next) => {
     await next();
 });
 
+app.use(cors());
+
 // Fetch Data from Open Weather Api server
-const getWeather = async (ctx, next) => {
-    const res = await fetch(url);
-    if (!res.ok) {
-      throw new Error("Bad response");
-    }
-    ctx.state.weather = await res.json();
-    await next();
+const getWeather = async (ctx) => {
+    city = ctx.request.body.city;
+    const cityCord = await fetch(cityUrl(city));
+    const ConvertedCityArray = await (cityCord).json();
+    let lat = ConvertedCityArray.coord.lat;
+    let lon = ConvertedCityArray.coord.lat;
+    let sevenDaysForeCast = await fetch(fullDataUrl(lat, lon));
+    sevenDaysForeCast = await sevenDaysForeCast.json();
+    console.log(sevenDaysForeCast);
+    ctx.body = {ConvertedCityArray, sevenDaysForeCast};
+
+    // ctx.body = {cityCord, sevenDaysForeCast};
+    // if (!res.ok) {
+    //   throw new Error("Bad response");
+    // }
+    // ctx.state.weather = await res.json();
+    // await next();
 };
  
 // Send weather data to user call
-const sendWeatherData = ctx => {
-    ctx.status = 200;
-    ctx.body = ctx.state.weather;
-};
+// const sendWeatherData = ctx => {
+//     ctx.status = 200;
+//     ctx.body = ctx.state.weather;
+// };
 
 // Handdle weather error
-const handleErrors = async (ctx, next) => {
-    try {
-      await next();
-    } catch (e) {
-      ctx.status = 502;
-    }
-  };
+// const handleErrors = async (ctx, next) => {
+//     try {
+//       await next();
+//     } catch (e) {
+//       ctx.status = 502;
+//     }
+//   };
 
 const checkDuplicateUsers = (user) => {
     const match = users.find(item => item.name === user.name);
@@ -67,7 +82,7 @@ const checkDuplicateUsers = (user) => {
      user.id = users.length; 
 
      if(checkDuplicateUsers(user)){
-        ctx.body = `${user.name} 'User is alredy Register`;
+        ctx.body = `${user.name} 'User is alredy registered`;
         ctx.status = 400;
         return;
      }
@@ -75,15 +90,20 @@ const checkDuplicateUsers = (user) => {
     users.push(user);
     fs.writeFileSync(`${userPath}/users.txt`, JSON.stringify(users) , (err) => {
     });
-    ctx.body = `${user.name} 'User is Register`;
+    ctx.body = user;
     ctx.status = 200;
+}
+
+const findUser = (userHash) => {
+    const result = users.find(item => item.hash === userHash);
+    return result;
 }
 
 // Check Login of User
 const loginUser = (ctx) => {
-    let headers = ctx.request.headers.authorization;
-    if(headers && checkRegisterdUser(headers)){
-        ctx.body = "Successful login";
+    let headerHash = ctx.request.headers.authorization;
+    if(headerHash && checkRegisterdUser(headerHash)){
+        ctx.body = findUser(headerHash);
         ctx.status = 200;
     } else {
         ctx.body = "Username"
@@ -145,11 +165,12 @@ app.use(async (ctx, next) => {
 })
 
 // Routers
-router.get("/weather", handleErrors, getWeather,sendWeatherData);
+router.post("/weather", getWeather);
 router.post("/register", registerUser);
 router.get("/login", loginUser);
 router.del("/user/:id", deleteUser);
 router.get("/users", getAllUsers);
 
 app.use(router.routes()).use(router.allowedMethods());
-app.listen(3000);
+app.listen(3001);
+console.log("server is running at http://localhost:3001");

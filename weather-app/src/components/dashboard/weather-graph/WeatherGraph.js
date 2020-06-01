@@ -8,17 +8,19 @@ class WeatherGraph extends Component{
 
     render(){
         return(
-            <article class="widget">
-                <div class="weatherIcon"><i class="wi-day-cloudy"></i></div>
-                <div class="weatherInfo">
-                    <div class="temperature"><span>25&deg;</span></div>
-                    <div class="description">    
-                    <div class="weatherCondition">CLOUDY</div>    
-                    <div class="place">New York, New York</div>
+            <div>
+                <div className="widget">
+                    <div className="weatherIcon"><i className="wi-day-cloudy"></i></div>
+                    <div className="weatherInfo">
+                        <div className="temperature"><span>25&deg;</span></div>
+                        <div className="description">    
+                        <div className="weatherCondition">CLOUDY</div>    
+                        <div className="place">New York, New York</div>
+                        </div>
                     </div>
+                    <div className="date">1st Jan</div>
                 </div>
-                <div class="date">1st Jan</div>
-            </article>
+            </div>
         )
     }
 }

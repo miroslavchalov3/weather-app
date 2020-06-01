@@ -5,6 +5,10 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
+    Link,
+    Redirect,
+    useHistory,
+    useLocation
   } from "react-router-dom";
 
 import './App.css';
@@ -17,14 +21,35 @@ function App() {
               <Route exact path="/">
                 <HomePage></HomePage>
               </Route>
-              <Route exact path="/dashboard">
+              <PrivateRoute path="/dashboard">
                 <Dashboard></Dashboard>
-                
-              </Route>
+              </PrivateRoute>
             </Switch>
           </div>
         </Router>
     );
 }
+
+function PrivateRoute({ children, ...rest }) {
+    let auth = sessionStorage.getItem('hash');
+
+    return (
+      <Route
+        {...rest}
+        render={({ location }) =>
+          auth ? (
+            children
+          ) : (
+            <Redirect
+              to={{
+                pathname: "/",
+                state: { from: location }
+              }}
+            />
+          )
+        }
+      />
+    );
+  }
 
 export default App;
