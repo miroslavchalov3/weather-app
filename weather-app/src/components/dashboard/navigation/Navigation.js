@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Logout from '../logout/Logout'
+import './Navigation.css';
 
 class Navigation extends Component{
 
@@ -9,11 +10,11 @@ class Navigation extends Component{
 
     render(){
         return (
-            <nav>
+            <div class="navigation-container">
                 <div>Username:</div>
                 <h1>Welcome To Weahter App Navigation</h1>
                 <Logout></Logout>
-            </nav>
+            </div>
         )
     }
 }
