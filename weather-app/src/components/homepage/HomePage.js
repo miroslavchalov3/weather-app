@@ -8,8 +8,8 @@ class HomePage extends Component{
     state = {
         isRegister: false,
         text: {
-            registerTitle: "Not a user Register ?",
-            loginTitle: "Alredy Register ",
+            registerTitle: "Not a user Sign Up ?",
+            loginTitle: "Alredy Sign in ",
             clickHereText: "click here",
             register: "Register",
             login: "Login"
@@ -25,9 +25,7 @@ class HomePage extends Component{
 
     }
 
-
     render(){
-
         return (
             <div className="form-container">
                 <div className="form">
@@ -39,13 +37,7 @@ class HomePage extends Component{
                     <div>
                         {this.state.isRegister ? <RegisterFrom></RegisterFrom> : <LoginForm></LoginForm>}
                     </div>
-                    <div>
-                        {this.state.isRegister ? <button value="Register" className="button register">{this.state.text.register}</button> : 
-                        <button className="button login"> {this.state.text.login}</button>}
-                    </div>
                 </div>
-                
-                
             </div>
            
           );

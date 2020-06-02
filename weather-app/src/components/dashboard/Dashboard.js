@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Navigation from './navigation/Navigation'
-import WeatherGraph from './weather-graph/WeatherGraph'
+import WeatherGraph from './weather-graph/WeatherGraph';
+import  { withRouter } from 'react-router-dom';
+
 import './Dashboard.css';
 
 class Dashboard extends Component{
@@ -13,9 +15,8 @@ class Dashboard extends Component{
 
 
     render(){
-
         return (
-            <div class="main">
+            <div className="main">
                 <Navigation></Navigation>
                 <WeatherGraph></WeatherGraph>
             </div>
@@ -23,4 +24,4 @@ class Dashboard extends Component{
     }
 }
 
-export default Dashboard;
+export default withRouter(Dashboard);

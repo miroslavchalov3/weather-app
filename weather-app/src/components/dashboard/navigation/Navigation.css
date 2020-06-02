@@ -1,4 +1,34 @@
 .navigation-container{
-    width: 100%;
+    padding: 4px;
     background: #fff;
+    display: flex;
+    align-items: center;
+
+}
+.bold{
+    font-size: 15px;
+    font-weight: bolder;
+}
+.username{
+    font-size: 20px;
+}
+.user-container{
+    width: 25%;
+}
+.welcome-container{
+    text-align: center;
+    width: 50%;
+}
+
+.welcome-container h1{
+    font-size: 20px;
+}
+
+.log-out-container{
+    width: 25%;
+    text-align: right;
+}
+
+.left-margin{
+    margin-left: 10px;
 }
