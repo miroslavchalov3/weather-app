@@ -1,0 +1,12 @@
+
+.user-container{
+    width: 100%;
+    background: #fff;
+}
+.user{
+    background: #fff;
+    width: 200px;
+}
+.name{
+    width: 200px;
+}

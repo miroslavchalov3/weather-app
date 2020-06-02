@@ -36,40 +36,26 @@ app.use(async (ctx, next) => {
 
 app.use(cors());
 
-// Fetch Data from Open Weather Api server
+// Fetch Data from Open Weather Api server and get City and Weather for 7 days
 const getWeather = async (ctx) => {
     city = ctx.request.body.city;
     const cityCord = await fetch(cityUrl(city));
     const ConvertedCityArray = await (cityCord).json();
     let lat = ConvertedCityArray.coord.lat;
-    let lon = ConvertedCityArray.coord.lat;
+    let lon = ConvertedCityArray.coord.lon;
     let sevenDaysForeCast = await fetch(fullDataUrl(lat, lon));
     sevenDaysForeCast = await sevenDaysForeCast.json();
-    console.log(sevenDaysForeCast);
-    ctx.body = {ConvertedCityArray, sevenDaysForeCast};
-
-    // ctx.body = {cityCord, sevenDaysForeCast};
-    // if (!res.ok) {
-    //   throw new Error("Bad response");
-    // }
-    // ctx.state.weather = await res.json();
-    // await next();
+    ctx.body = sevenDaysForeCast;
 };
  
-// Send weather data to user call
-// const sendWeatherData = ctx => {
-//     ctx.status = 200;
-//     ctx.body = ctx.state.weather;
-// };
-
-// Handdle weather error
-// const handleErrors = async (ctx, next) => {
-//     try {
-//       await next();
-//     } catch (e) {
-//       ctx.status = 502;
-//     }
-//   };
+// global error handdler
+const handleErrors = async (ctx, next) => {
+    try {
+      await next();
+    } catch (e) {
+      ctx.status = 502;
+    }
+  };
 
 const checkDuplicateUsers = (user) => {
     const match = users.find(item => item.name === user.name);
@@ -136,7 +122,9 @@ const getAllUsers = (ctx) => {
 }
 
 const deleteUser = (ctx) => {
+    console.log(ctx);
     let userHash =  ctx.request.headers.authorization;
+    console.log(userHash);
     let deletedUserId = ctx.params.id;
     if(checkAdmin(userHash)){
         findAndDeleteUser(deletedUserId)
@@ -165,11 +153,11 @@ app.use(async (ctx, next) => {
 })
 
 // Routers
-router.post("/weather", getWeather);
-router.post("/register", registerUser);
-router.get("/login", loginUser);
-router.del("/user/:id", deleteUser);
-router.get("/users", getAllUsers);
+router.post("/weather", getWeather, handleErrors);
+router.post("/register", registerUser, handleErrors);
+router.get("/login", loginUser, handleErrors);
+router.del("/user/:id", deleteUser, handleErrors);
+router.get("/users", getAllUsers, handleErrors);
 
 app.use(router.routes()).use(router.allowedMethods());
 app.listen(3001);
