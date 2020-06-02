@@ -1,1 +1,1 @@
-[{"name":"admin","pass":"admin","hash":"YWRtaW46YWRtaW4=","isAdmin":"true"},{"name":"asd","password":"asd","hash":"YXNkOmFzZA==","id":1},{"name":"tessat","password":"testovo","hash":"dGVzc2F0OnRlc3Rvdm8=","id":2},{"name":"asdsadsa","password":"dsadsadsa","hash":"YXNkc2Fkc2E6ZHNhZHNhZHNh","id":3}]
+[{"name":"admin","pass":"admin","hash":"YWRtaW46YWRtaW4=","isAdmin":"true"}]

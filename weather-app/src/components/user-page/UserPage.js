@@ -46,7 +46,7 @@ class UserPage extends Component{
             {this.state.isUsersLoaded ? this.state.result.map(item => {
                 return <div className="user-container">
                     <div className="user"  hash={item.hash}><span className="name">Name:{item.name}</span>
-                    <button className="deleteUser login" onClick={this.DeleteUser.bind(this, item.id)}>Delete User</button></div>
+                    <button className="delete-button login" onClick={this.DeleteUser.bind(this, item.id)}>Delete User</button></div>
                 </div>
             }): ""}
             </div>
